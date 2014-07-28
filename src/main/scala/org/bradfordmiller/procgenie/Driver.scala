@@ -1,3 +1,5 @@
+package org.bradfordmiller.procgenie
+
 import scala.util.{Try, Success, Failure}
 import grizzled.slf4j.Logging
 
