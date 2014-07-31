@@ -13,7 +13,7 @@ object Arm {
       getB(closeable)
     } finally {
       closeable.close()
-    }  
+  }  
 }
 
 class MetaDataExtractor(connString: String, procName: String) extends SqlClassLoader with Logging {
@@ -41,7 +41,7 @@ class MetaDataExtractor(connString: String, procName: String) extends SqlClassLo
           val columnRadix          = rs.getShort(11);
           val columnNullable       = rs.getShort(12);
           val columnRemarks        = rs.getString(13);
-          val noClue        	   = rs.getString(14);
+          
           info("****NEXT****")
           info("procedureCatalog= " + procedureCatalog)
           info("procedureSchema= " + procedureSchema)
@@ -56,7 +56,7 @@ class MetaDataExtractor(connString: String, procName: String) extends SqlClassLo
           info( "columnRadix= "          + columnRadix)
           info( "columnNullable= "       + columnNullable)
           info( "columnRemarks= "        + columnRemarks)
-          info( "noClue= "        + noClue)
+          
         }
       }      
     }

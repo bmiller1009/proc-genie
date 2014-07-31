@@ -15,6 +15,8 @@ cpdSettings
 
 findbugsSettings
 
+resolvers += "spray repo" at "http://repo.spray.io"
+
 libraryDependencies ++= Seq(
 			"org.scalatest" % "scalatest_2.10" % "2.0" % "test",
 			"mysql" % "mysql-connector-java" % "5.1.30",
@@ -48,3 +50,6 @@ publishMavenStyle := true
 publishArtifact in Test := false
 
 //pomIncludeRepository := { _ => true }
+
+//scala twirl for templating
+seq(Twirl.settings: _*)

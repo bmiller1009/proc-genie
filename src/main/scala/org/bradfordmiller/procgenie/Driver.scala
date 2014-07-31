@@ -28,4 +28,8 @@ object Driver extends App with Logging {
   info("Hello world!")
   
   info("Ending driver...")
+  
+  val text = org.bradfordmiller.procgenie.txt.test_template("Darth", 42)
+  
+  println(s"Processed template text: $text")
 }
