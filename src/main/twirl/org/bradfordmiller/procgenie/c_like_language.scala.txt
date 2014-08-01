@@ -1,0 +1,5 @@
+@(modifier: String = "public", isStatic: Boolean = true, returnType: String = "void", args: String)
+
+@modifier @(if(isStatic) "static" else "") @returnType (@args) {
+
+}

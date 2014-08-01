@@ -30,10 +30,10 @@ class MetaDataExtractor(connString: String, procName: String) extends SqlClassLo
       using(conn.getMetaData().getProcedureColumns(conn.getCatalog(), null, procName, "%")) {rs =>
         
         @tailrec
-        def processRS(parameterSet: Set[ProcedureMetaData], resultSet: RS): Set[ProcedureMetaData] = {
+        def processRS(paramSet: Set[ProcedureMetaData], resultSet: RS): Set[ProcedureMetaData] = {
           
           if(!rs.next())
-            parameterSet
+            paramSet
           else {
             
             val procMetaData = ProcedureMetaData(
@@ -50,7 +50,7 @@ class MetaDataExtractor(connString: String, procName: String) extends SqlClassLo
               rs.getBoolean(11)
             )    
             
-            processRS(parameterSet + procMetaData, resultSet)
+            processRS(paramSet + procMetaData, resultSet)
           }
         }        
         processRS(Set(), rs)        
