@@ -1,9 +1,10 @@
 package org.bradfordmiller.procgenie.sqlops
 
 import grizzled.slf4j.Logging
-import java.sql.{DriverManager, DatabaseMetaData, ResultSet}
+import java.sql.{DriverManager, DatabaseMetaData, ResultSet => RS}
 import org.bradfordmiller.procgenie.sqlops.Arm._
 import scala.language.reflectiveCalls
+import scala.annotation.tailrec
 
 object Arm {
 	
@@ -27,37 +28,32 @@ class MetaDataExtractor(connString: String, procName: String) extends SqlClassLo
     
     using(connection) {conn =>
       using(conn.getMetaData().getProcedureColumns(conn.getCatalog(), null, procName, "%")) {rs =>
-        while(rs.next()) {
-          val procedureCatalog     = rs.getString(1);
-          val procedureSchema      = rs.getString(2);
-          val procedureName        = rs.getString(3);
-          val columnName           = rs.getString(4);
-          val columnReturn         = rs.getShort(5);
-          val columnDataType       = rs.getInt(6);
-          val columnReturnTypeName = rs.getString(7);
-          val columnPrecision      = rs.getInt(8);
-          val columnByteLength     = rs.getInt(9);
-          val columnScale          = rs.getShort(10);
-          val columnRadix          = rs.getShort(11);
-          val columnNullable       = rs.getShort(12);
-          val columnRemarks        = rs.getString(13);
+        
+        @tailrec
+        def processRS(parameterSet: Set[ProcedureMetaData], resultSet: RS): Set[ProcedureMetaData] = {
           
-          info("****NEXT****")
-          info("procedureCatalog= " + procedureCatalog)
-          info("procedureSchema= " + procedureSchema)
-          info("procedureName= "   + procedureName)
-          info("columnName= "      + columnName)
-          info("columnReturn= "    + columnReturn)
-          info("columnDataType= "  + columnDataType)
-          info( "columnReturnTypeName= " + columnReturnTypeName)
-          info( "columnPrecision= "      + columnPrecision)
-          info( "columnByteLength= "     + columnByteLength)
-          info( "columnScale= "          + columnScale)
-          info( "columnRadix= "          + columnRadix)
-          info( "columnNullable= "       + columnNullable)
-          info( "columnRemarks= "        + columnRemarks)
-          
-        }
+          if(!rs.next())
+            parameterSet
+          else {
+            
+            val procMetaData = ProcedureMetaData(
+              rs.getString(1),
+              if(rs.getString(2) != null) Some(rs.getString(2)) else None,
+              rs.getString(3),
+              rs.getString(4),
+              rs.getShort(5),
+              rs.getInt(6),
+              rs.getString(7),
+              rs.getInt(8),
+              rs.getInt(9),
+              rs.getShort(10),
+              rs.getBoolean(11)
+            )    
+            
+            processRS(parameterSet + procMetaData, resultSet)
+          }
+        }        
+        processRS(Set(), rs)        
       }      
     }
   }

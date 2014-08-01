@@ -15,13 +15,15 @@ object Driver extends App with Logging {
   info("NEW EXTRACT")
   
   val extractor1 = new MetaDataExtractor(connString, "inventory_in_stock")
-  extractor1.scanProcedure()
+  val set1 = extractor1.scanProcedure()
+  info(set1)
   
   info("NEW EXTRACT")
   info("NEW EXTRACT")
   
   val extractor2 = new MetaDataExtractor(connString, "rewards_report")
-  extractor2.scanProcedure()
+  val set2 = extractor2.scanProcedure()
+  info(set2)
   
   info("Starting driver...")  
   
